@@ -1,0 +1,78 @@
+{
+  "nongtrai": {
+    "1": {
+      "bag": {},
+      "plots": [
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1739128330269,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1739128330269,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1739128330269,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1739128330269,
+          "status": "Đất tốt",
+          "fertilized": []
+        }
+      ]
+    },
+    "manhdz": {
+      "bag": {},
+      "plots": [
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1743957025299,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1743957025299,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1743957025299,
+          "status": "Đất tốt",
+          "fertilized": []
+        },
+        {
+          "crop": null,
+          "plantedAt": null,
+          "waterLevel": 100,
+          "lastWateredAt": 1743957025299,
+          "status": "Đất tốt",
+          "fertilized": []
+        }
+      ]
+    }
+  }
+}
