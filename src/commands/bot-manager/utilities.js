@@ -304,7 +304,7 @@ export async function checkNotFindCommand(api, message, command, availableComman
       {
         success: false,
         message:
-          `Nếu Bạn Thắc Mắc Tao Có Những Lệnh Gì, Hãy:\n` +
+          `Nếu Bạn Thắc Mắc Tôi Có Những Lệnh Gì, Hãy:\n` +
           `${prefix}help - Xem hướng dẫn sử dụng\n` +
           `${prefix}game - Xem hướng dẫn chơi game\n` +
           `${prefix}command - Xem danh sách lệnh có sẵn`,
