@@ -4,7 +4,7 @@ import path from "path";
 import * as cv from "./index.js";
 import { formatCurrency } from "../format-util.js";
 
-registerFont('./assets/fonts/NotoColorEmoji.ttf', { family: 'Noto Emoji' });
+registerFont('./assets/fonts/NotoEmoji-Bold.ttf', { family: 'Noto Emoji' });
 
 export function hanldeNameUser(name) {
   const words = name.split(" ");
