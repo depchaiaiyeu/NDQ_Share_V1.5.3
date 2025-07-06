@@ -220,17 +220,28 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
     const senderName = message.data.dName;
     const isGroup = message.type === MessageType.GroupMessage;
 
-    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
+    const serverName = "Kiên";
 
-    let msg = `${isGroup ? senderName + "\n\n" : ""}` + `${result.message}`;
+    const style = MultiMsgStyle([
+      MessageStyle(
+        isGroup ? senderName.length + 1 + 1 : 0,
+        serverName.length,
+        COLOR_RED,
+        SIZE_18,
+        IS_BOLD
+      ),
+    ]);
+
+    let msg = `${isGroup ? `@${senderName}\n` : ""}${serverName}\n${result.message}`;
     if (hasState) {
       const state = result.success ? "✅✅✅" : "❌❌❌";
       msg += `\n${state}`;
     }
+
     await api.sendMessage(
       {
         msg: msg,
-        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length + 1 }],
         style: style,
         quote: message,
         linkOn: false,
