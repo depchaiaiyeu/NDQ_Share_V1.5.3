@@ -8,7 +8,7 @@ import { getTopPlayers } from "./jdbc.js";
 export * from "./player.js";
 export * from "./jdbc.js";
 
-let nameServer = "";
+let nameServer = "Kiên Đẹp Chai";
 let connection;
 let NAME_TABLE_PLAYERS;
 let NAME_TABLE_ACCOUNT;
