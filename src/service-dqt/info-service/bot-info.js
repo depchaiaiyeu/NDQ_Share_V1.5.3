@@ -140,7 +140,7 @@ function getSettingEmoji(settingKey) {
 export function getSettingName(settingKey) {
   const nameMap = {
     activeBot: "Tương tác với thành viên",
-    activeGame: "bật xử lý tương tác trò chơi",
+    activeGame: "Bật xử lý tương tác trò chơi",
     antiSpam: "Chống spam",
     removeLinks: "Chặn liên kết",
     filterBadWords: "Xoá tin nhắn thô tục",
