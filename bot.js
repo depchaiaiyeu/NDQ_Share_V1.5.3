@@ -1,36 +1,16 @@
-/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                   _ooOoo_
-                  o8888888o
-                  88" . "88
-                  (| -_- |)
-                  O\  =  /O
-               ____/`---'\____
-             .'  \\|     |//  `.
-            /  \\|||  :  |||//  \
-           /  _||||| -:- |||||-  \
-           |   | \\\  -  /// |   |
-           | \_|  ''\---/''  |   |
-           \  .-\__  `-`  ___/-. /
-         ___`. .'  /--.--\  `. . __
-      ."" '<  `.___\_<|>_/___.'  >'"".
-     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-     \  \ `-.   \_ __\ /__ _/   .-` /  /
-======`-.____`-.___\_____/___.-`____.-'======
-                   `=---='
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  PHẬT ĐỘ, CODE Không LỖI, TỐI ƯU Không BUG
-            DEVELOPER: SBT
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
-
 import { spawn } from 'child_process';
 import path from 'path';
-const cmdPath = path.join('C:', 'Windows', 'System32', 'cmd.exe');
 import { ensureLogFiles, logManagerBot } from './src/utils/io-json.js';
 
 let botProcess;
 
+// Xác định shell phù hợp cho từng OS
+const isWindows = process.platform === 'win32';
+const shell = isWindows ? 'cmd.exe' : '/bin/bash';
+const shellArg = isWindows ? '/c' : '-c';
+
 function startBot() {
-    botProcess = spawn(cmdPath, ['/c', 'npm start'], {
+    botProcess = spawn(shell, [shellArg, 'npm start'], {
         detached: true,
         stdio: 'ignore'
     });
@@ -43,7 +23,7 @@ function startBot() {
 function stopBot() {
     if (botProcess && botProcess.pid) {
         try {
-            process.kill(-botProcess.pid);
+            process.kill(-botProcess.pid); // Kill group
             logManagerBot('Bot stopped');
             console.log('Bot stopped');
         } catch (err) {
@@ -84,7 +64,7 @@ function attachBotEvents(botProcess) {
 
 setInterval(() => {
     // restartBot();
-}, 1800000);//30p
+}, 1800000); // 30 phút
 
 process.on('SIGINT', () => {
     logManagerBot('Bot stopped by user (SIGINT). Restarting...');
@@ -99,8 +79,8 @@ process.on('SIGTERM', () => {
 });
 
 process.on('exit', () => {
-    logManagerBot('Bot process was closed unexpectedly. Restarting after 1 seconds...');
-    console.log('Bot process was closed unexpectedly. Restarting after 1 seconds...');
+    logManagerBot('Bot process was closed unexpectedly. Restarting after 1 second...');
+    console.log('Bot process was closed unexpectedly. Restarting after 1 second...');
     setTimeout(() => {
         startBot();
     }, 1000);
