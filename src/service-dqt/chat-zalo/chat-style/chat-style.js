@@ -222,7 +222,7 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
 
     const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? senderName + "\n" : ""}` + `${result.message}`;
+    let msg = `${isGroup ? senderName + "\n\n" : ""}` + `${result.message}`;
     if (hasState) {
       const state = result.success ? "✅✅✅" : "❌❌❌";
       msg += `\n${state}`;
