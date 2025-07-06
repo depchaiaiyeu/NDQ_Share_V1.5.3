@@ -61,9 +61,8 @@ export async function checkAndSendBusinessCard(api, senderId, senderName) {
     await api.sendMessage(
       {
         msg:
-          `Xin chào ${senderName}! Nếu bạn muốn liên hệ mua Bot, đây là danh thiếp của chủ tôi: 0943050976\n` +
-          `Link Groups Box Của Tôi: https://zalo.me/g/brsbvs453 \n\n` +
-          `Lưu Ý: Chủ của tôi Không hỗ trợ các vấn đề liên quan đến SERVER NRO!!!`,
+          `Xin chào ${senderName}! Nếu bạn muốn liên hệ mua Bot, đây là danh thiếp của chủ tôi: 0345864723\n\n` +
+          `Lưu ý: Chủ của tôi Không hỗ trợ các vấn đề liên quan đến hành vi vi phạm pháp luật!!!`,
       },
       senderId,
       MessageType.DirectMessage
