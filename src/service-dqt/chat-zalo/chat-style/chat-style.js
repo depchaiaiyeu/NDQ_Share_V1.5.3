@@ -17,23 +17,14 @@ export async function sendMessageInsufficientAuthority(api, message, caption, ha
     const iconState = "\n🚫🚫🚫";
     const isGroup = message.type === MessageType.GroupMessage;
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${hasState ? iconState : ""}`;
-    
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${caption}${hasState ? iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         ttl: 60000,
         style: style,
         linkOn: false,
@@ -54,23 +45,14 @@ export async function sendMessageQuery(api, message, caption, hasState = true) {
     const isGroup = message.type === MessageType.GroupMessage;
     const iconState = "\n❓❓❓";
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${hasState ? iconState : ""}`;
-    
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${caption}${hasState ? iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         ttl: 60000,
         style: style,
         linkOn: false,
@@ -91,23 +73,14 @@ export async function sendMessageWarning(api, message, caption, hasState = true)
     const isGroup = message.type === MessageType.GroupMessage;
     const iconState = "\n🚨🚨🚨";
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${hasState ? iconState : ""}`;
-    
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${caption}${hasState ? iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         ttl: 60000,
         style: style,
         linkOn: false,
@@ -128,23 +101,14 @@ export async function sendMessageComplete(api, message, caption, hasState = true
     const isGroup = message.type === MessageType.GroupMessage;
     const iconState = "\n✅✅✅";
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${hasState ? iconState : ""}`;
-    
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${caption}${hasState ? iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         ttl: 60000,
         style: style,
         linkOn: false,
@@ -165,23 +129,14 @@ export async function sendMessageFailed(api, message, caption, hasState = true) 
     const isGroup = message.type === MessageType.GroupMessage;
     const iconState = "\n❌❌❌";
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${hasState ? iconState : ""}`;
-    
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${caption}${hasState ? iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         ttl: 60000,
         style: style,
         linkOn: false,
@@ -200,25 +155,13 @@ export async function sendMessageStateQuote(api, message, caption, state, ttl = 
     const senderId = message.data.uidFrom;
     const threadId = message.threadId;
     const iconState = state ? "✅✅✅" : "❌❌❌";
-    const isGroup = message.type === MessageType.GroupMessage;
-
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
-
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${caption}${onState ? "\n" + iconState : ""}`;
-    
+    const style = MultiMsgStyle([MessageStyle(senderName.length + 1, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
+    let msg = `${senderName}\n` + `${caption}${onState ? "\n" + iconState : ""}`;
     await api.sendMessage(
       {
         msg: msg,
         quote: message,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         style: style,
         ttl: ttl,
         linkOn: false,
@@ -234,8 +177,8 @@ export async function sendMessageStateQuote(api, message, caption, state, ttl = 
 export async function sendMessageState(api, threadId, caption, state, ttl = 0) {
   try {
     const iconState = state ? "✅✅✅" : "❌❌❌";
-    const style = MultiMsgStyle([MessageStyle(0, serverName.length, COLOR_RED, SIZE_18, IS_BOLD)]);
-    let msg = `${serverName}\n${caption}\n${iconState}`;
+    const style = MultiMsgStyle([MessageStyle(0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
+    let msg =`${caption}\n${iconState}`;
     await api.sendMessage(
       {
         msg: msg,
@@ -254,8 +197,8 @@ export async function sendMessageState(api, threadId, caption, state, ttl = 0) {
 export async function sendMessageResultRequest(api, type = MessageType.GroupMessage, threadId, caption, state, ttl = 0) {
   try {
     const iconState = state ? "✅✅✅" : "❌❌❌";
-    const style = MultiMsgStyle([MessageStyle(0, serverName.length, COLOR_RED, SIZE_18, IS_BOLD)]);
-    let msg = `${serverName}\n${caption}\n${iconState}`;
+    const style = MultiMsgStyle([MessageStyle(0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
+    let msg =`${caption}\n${iconState}`;
     await api.sendMessage(
       {
         msg: msg,
@@ -280,7 +223,7 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
 
     const style = MultiMsgStyle([
       MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
+        isGroup ? senderName.length + 1 + 1 : 0,
         serverName.length,
         COLOR_RED,
         SIZE_18,
@@ -288,7 +231,7 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
       ),
     ]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${result.message}`;
+    let msg = `${isGroup ? `@${senderName}\n` : ""}${serverName}\n${result.message}`;
     if (hasState) {
       const state = result.success ? "✅✅✅" : "❌❌❌";
       msg += `\n${state}`;
@@ -297,7 +240,7 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
     await api.sendMessage(
       {
         msg: msg,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length + 1 }],
         style: style,
         quote: message,
         linkOn: false,
@@ -312,11 +255,11 @@ export async function sendMessageFromSQL(api, message, result, hasState = true, 
 }
 
 export async function sendMessageImageNotQuote(api, result, threadId, waitingImagePath, ttl = 0, isUseProphylactic = false) {
-  const style = MultiMsgStyle([MessageStyle(0, serverName.length, COLOR_RED, SIZE_18, IS_BOLD)]);
+  const style = MultiMsgStyle([MessageStyle(0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
   try {
     await api.sendMessage(
       {
-        msg: `${serverName}\n${result.message}`,
+        msg: result.message,
         attachments: [waitingImagePath],
         isUseProphylactic: isUseProphylactic,
         ttl: ttl,
@@ -339,26 +282,17 @@ export async function sendMessageFromSQLImage(api, message, result, hasState = t
     const senderName = message.data.dName;
     const isGroup = message.type === MessageType.GroupMessage;
 
-    const style = MultiMsgStyle([
-      MessageStyle(
-        isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-        serverName.length,
-        COLOR_RED,
-        SIZE_18,
-        IS_BOLD
-      ),
-    ]);
+    const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, nameServer.length, COLOR_RED, SIZE_18, IS_BOLD)]);
 
-    let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${result.message}`;
+    let msg = `${isGroup ? senderName + "\n" : ""}` + `${result.message}`;
     if (hasState) {
       const state = result.success ? "✅✅✅" : "❌❌❌";
       msg += `\n${state}`;
     }
-    
     await api.sendMessage(
       {
         msg: msg,
-        mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+        mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
         attachments: waitingImagePath ? [waitingImagePath] : [],
         style: style,
         linkOn: false,
@@ -377,22 +311,13 @@ export async function sendMessageWarningRequest(api, message, objectData, ttl = 
   const senderName = message.data.dName;
   const isGroup = message.type === MessageType.GroupMessage;
 
-  const style = MultiMsgStyle([
-    MessageStyle(
-      isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-      serverName.length,
-      COLOR_RED,
-      SIZE_18,
-      IS_BOLD
-    ),
-  ]);
-
-  let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${objectData.caption}`;
+  const style = MultiMsgStyle([MessageStyle(isGroup ? senderName.length + 1 : 0, objectData.caption.length, COLOR_RED, SIZE_16, IS_BOLD)]);
+  let msg = `${isGroup ? senderName + "\n" : ""}` + `${objectData.caption}`;
 
   return await api.sendMessage(
     {
       msg: msg,
-      mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+      mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
       attachments: objectData.imagePath ? [objectData.imagePath] : [],
       style,
       ttl,
@@ -410,21 +335,14 @@ export async function sendMessageProcessingRequest(api, message, objectData, ttl
   const isGroup = message.type === MessageType.GroupMessage;
 
   const style = MultiMsgStyle([
-    MessageStyle(
-      isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-      serverName.length,
-      COLOR_YELLOW,
-      SIZE_18,
-      IS_BOLD
-    ),
+    MessageStyle(isGroup ? senderName.length + 1 : 0, objectData.caption.length, COLOR_YELLOW, SIZE_16, IS_BOLD),
   ]);
-
-  let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${objectData.caption}`;
+  let msg = `${isGroup ? senderName + "\n" : ""}` + `${objectData.caption}`;
 
   return await api.sendMessage(
     {
       msg: msg,
-      mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+      mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
       attachments: objectData.imagePath ? [objectData.imagePath] : [],
       style,
       ttl,
@@ -442,21 +360,14 @@ export async function sendMessageCompleteRequest(api, message, objectData, ttl =
   const isGroup = message.type === MessageType.GroupMessage;
 
   const style = MultiMsgStyle([
-    MessageStyle(
-      isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-      serverName.length,
-      COLOR_GREEN,
-      SIZE_18,
-      IS_BOLD
-    ),
+    MessageStyle(isGroup ? senderName.length + 1 : 0, objectData.caption.length, COLOR_GREEN, SIZE_16, IS_BOLD),
   ]);
-
-  let msg = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n${objectData.caption}`;
+  let msg = `${isGroup ? senderName + "\n" : ""}` + `${objectData.caption}`;
 
   return await api.sendMessage(
     {
       msg: msg,
-      mentions: isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : [],
+      mentions: [{ pos: 0, uid: senderId, len: senderName.length }],
       attachments: objectData.imagePath ? [objectData.imagePath] : [],
       style,
       ttl,
@@ -474,22 +385,18 @@ export async function sendMessageTag(api, message, objectData, ttl = 0) {
   const isGroup = message.type === MessageType.GroupMessage;
 
   const style = MultiMsgStyle([
-    MessageStyle(
-      isGroup ? senderName.length + 1 + 1 : senderName.length + 1,
-      serverName.length,
-      COLOR_GREEN,
-      SIZE_18,
-      IS_BOLD
-    ),
+    MessageStyle(isGroup ? senderName.length + 1 : 0, objectData.caption.length, COLOR_GREEN, SIZE_16, IS_BOLD),
   ]);
   
-  let temp = `${isGroup ? `@${senderName}\n` : `${senderName}\n`}${serverName}\n`;
+  // Tạo prefix string
+  let temp = `${isGroup ? senderName + "\n" : ""}`;
   let msg = temp + `${objectData.caption}`;
 
+  // Điều chỉnh vị trí mentions
   if (objectData.mentions && Array.isArray(objectData.mentions)) {
     objectData.mentions = objectData.mentions.map(mention => ({
       ...mention,
-      pos: mention.pos + temp.length
+      pos: mention.pos + temp.length // Cộng thêm độ dài của temp vào pos
     }));
   }
 
@@ -497,8 +404,8 @@ export async function sendMessageTag(api, message, objectData, ttl = 0) {
     {
       msg: msg,
       mentions: [
-        ...(isGroup ? [{ pos: 0, uid: senderId, len: senderName.length + 1 }] : []),
-        ...(objectData.mentions || [])
+        { pos: 0, uid: senderId, len: senderName.length }, // Tag người gửi
+        ...(objectData.mentions || []) // Tag các mentions khác
       ],
       attachments: objectData.imagePath ? [objectData.imagePath] : [],
       style,
