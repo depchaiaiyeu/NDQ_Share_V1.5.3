@@ -1,9 +1,9 @@
 {
   "nameServer": "vxk-js-bot",
-  "host": "nozomi.proxy.rlwy.net",
-  "port": 39647,
-  "user": "root",
-  "password": "ovQjDbuoyGIbCLhPQNJpzvikbgDhXbeY",
+  "host": "mysql-2a0d5164-vxk-js-bot.g.aivencloud.com",
+  "port": 18833,
+  "user": "avnadmin",
+  "password": "AVNS_NBKj0uVGZ8vIgzLiHW0",
   "database": "railway",
   "tablePlayerZalo": "players_zalo",
   "tableAccount": "account",
