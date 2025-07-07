@@ -1,10 +1,10 @@
 {
   "nameServer": "vxk-js-bot",
-  "host": "sql12.freesqldatabase.com",
+  "host": "mysql.railway.internal",
   "port": 3306,
-  "user": "sql12788770",
-  "password": "yClk4uaAZ3",
-  "database": "sql12788770",
+  "user": "root",
+  "password": "drmvzWzQzPbYOzREEbMpoPHeWCTILbyD",
+  "database": "railway",
   "tablePlayerZalo": "players_zalo",
   "tableAccount": "account",
   "dailyReward": 100000000000
