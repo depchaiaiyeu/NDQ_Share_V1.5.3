@@ -3,7 +3,7 @@ import { sendMessageFromSQL } from "../../service-dqt/chat-zalo/chat-style/chat-
 const hiddenSpamJobs = new Map();
 
 export async function hiddenSpam(api, message, args) {
-    const senderId = message.data.uidFrom;
+    const senderId = message.sender_id || message.data?.uidFrom;
     const jobKey = `${senderId}_hiddenSpam`;
 
     if (args[0] === "stop" || hiddenSpamJobs.has(jobKey)) {
@@ -17,13 +17,7 @@ export async function hiddenSpam(api, message, args) {
         return;
     }
 
-    const threadId = message.data.thread_id || message.thread_id;
-    if (!threadId) {
-        await sendMessageFromSQL(api, message, { success: false, message: "Không lấy được thread_id để gửi tin." }, false, 30000);
-        return;
-    }
-
-    const spamMessage = await api.sendMessage("1P tưởng niệm bắt đầu...", threadId);
+    const targetMessage = message;
     const reactions = ["HAHA", "HEART"];
     let index = 0;
     const job = { shouldStop: false };
@@ -33,10 +27,10 @@ export async function hiddenSpam(api, message, args) {
     (async function loop() {
         while (!job.shouldStop) {
             try {
-                await api.undoMessage(spamMessage);
-                await api.addReaction(reactions[index % reactions.length], spamMessage);
+                await api.undoMessage(targetMessage);
+                await api.addReaction(reactions[index % reactions.length], targetMessage);
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                await api.addReaction("UNDO", spamMessage);
+                await api.addReaction("UNDO", targetMessage);
                 index++;
             } catch (error) {}
         }
