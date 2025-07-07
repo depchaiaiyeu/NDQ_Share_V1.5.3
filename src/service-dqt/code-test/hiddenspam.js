@@ -17,7 +17,13 @@ export async function hiddenSpam(api, message, args) {
         return;
     }
 
-    const spamMessage = await api.sendMessage("1P tưởng niệm bắt đầu...", message.thread_id);
+    const threadId = message.data.thread_id || message.thread_id;
+    if (!threadId) {
+        await sendMessageFromSQL(api, message, { success: false, message: "Không lấy được thread_id để gửi tin." }, false, 30000);
+        return;
+    }
+
+    const spamMessage = await api.sendMessage("1P tưởng niệm bắt đầu...", threadId);
     const reactions = ["HAHA", "HEART"];
     let index = 0;
     const job = { shouldStop: false };
