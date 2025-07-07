@@ -17,7 +17,6 @@ export async function hiddenSpam(api, message, args) {
         return;
     }
 
-    const targetMessage = message;
     const reactions = ["HAHA", "HEART"];
     let index = 0;
     const job = { shouldStop: false };
@@ -27,10 +26,9 @@ export async function hiddenSpam(api, message, args) {
     (async function loop() {
         while (!job.shouldStop) {
             try {
-                await api.undoMessage(targetMessage);
-                await api.addReaction(reactions[index % reactions.length], targetMessage);
+                await api.addReaction(reactions[index % reactions.length], message);
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                await api.addReaction("UNDO", targetMessage);
+                await api.addReaction("UNDO", message);
                 index++;
             } catch (error) {}
         }
