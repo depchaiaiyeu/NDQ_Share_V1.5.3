@@ -341,7 +341,7 @@ export async function checkNotFindCommand(api, message, command, availableComman
       {
         success: false,
         message:
-          `Không tìm thấy lệnh "${command}". Vui lòng sử dụng:\n` +
+          `Không tìm thấy lệnh "${command}". Hãy Chat:\n` +
           `${prefix}help - Xem hướng dẫn sử dụng\n` +
           `${prefix}game - Xem hướng dẫn chơi game\n` +
           `${prefix}command - Xem danh sách lệnh có sẵn`,
