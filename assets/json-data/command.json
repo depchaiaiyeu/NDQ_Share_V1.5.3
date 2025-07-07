@@ -2,17 +2,6 @@
   "prefix": ".",
   "commands": [
     {
-      "name": "hiddenspam",
-      "description": "Liên tục spam ẩn với các hành động như(undo, reaction, unreaction)",
-      "syntax": "{p}hiddenspam",
-      "permission": "adminLevelHigh",
-      "countdown": 1,
-      "icon": "💬",
-      "type": 5,
-      "author": "Vũ Xuân Kiên",
-      "active": true
-    },
-    {
       "name": "help",
       "alias": [
         "menu"
