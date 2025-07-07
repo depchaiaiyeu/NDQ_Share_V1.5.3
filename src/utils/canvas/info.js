@@ -5,7 +5,6 @@ import * as cv from "./index.js";
 import { formatCurrency } from "../format-util.js";
 
 registerFont('./assets/fonts/NotoEmoji-Bold.ttf', { family: 'Noto Emoji' });
-registerFont('./assets/fonts/FzPatuaOne.ttf', { family: 'FzPatuaOne' });
 
 export function hanldeNameUser(name) {
   const words = name.split(" ");
@@ -200,14 +199,14 @@ export async function createUserInfoImage(userInfo) {
       ctx.stroke();
 
       // Vẽ tên người dùng dưới avatar
-      ctx.font = "bold 32px FzPatuaOne";
+      ctx.font = "bold 32px BeVietnamPro";
       ctx.fillStyle = "#FFFFFF";
       ctx.textAlign = "center";
       const nameY = yAvatar + heightAvatar + 54;
       if (nameLine2) {
-        ctx.font = "bold 24px FzPatuaOne";
+        ctx.font = "bold 24px BeVietnamPro";
         ctx.fillText(nameLine1, xAvatar, nameY);
-        ctx.font = "bold 24px FzPatuaOne";
+        ctx.font = "bold 24px BeVietnamPro";
         ctx.fillText(nameLine2, xAvatar, nameY + 28);
       } else {
         ctx.fillText(nameLine1, xAvatar, nameY);
@@ -240,7 +239,7 @@ export async function createUserInfoImage(userInfo) {
   let y1 = 60;
 
   ctx.textAlign = "center";
-  ctx.font = "bold 48px FzPatuaOne";
+  ctx.font = "bold 48px BeVietnamPro";
   ctx.fillStyle = cv.getRandomGradient(ctx, width);
   ctx.fillText(userInfo.title, width / 2, y1);
 
@@ -260,7 +259,7 @@ export async function createUserInfoImage(userInfo) {
     { label: "🕰️ Lần cuối hoạt động", value: userInfo.lastActive },
   ];
 
-  ctx.font = "bold 28px FzPatuaOne";
+  ctx.font = "bold 28px BeVietnamPro";
   for (const field of fields) {
     ctx.fillStyle = cv.getRandomGradient(ctx, width);
     const labelText = field.label + ":";
@@ -417,14 +416,14 @@ export async function createUserCardGame(playerInfo) {
       ctx.stroke();
 
       // Vẽ tên người dùng dưới avatar
-      ctx.font = "bold 32px FzPatuaOne";
+      ctx.font = "bold 32px BeVietnamPro";
       ctx.fillStyle = "#FFFFFF";
       ctx.textAlign = "center";
       const nameY = yAvatar + heightAvatar + 54;
       if (nameLine2) {
-        ctx.font = "bold 24px FzPatuaOne";
+        ctx.font = "bold 24px BeVietnamPro";
         ctx.fillText(nameLine1, xAvatar, nameY);
-        ctx.font = "bold 24px FzPatuaOne";
+        ctx.font = "bold 24px BeVietnamPro";
         ctx.fillText(nameLine2, xAvatar, nameY + 28);
       } else {
         ctx.fillText(nameLine1, xAvatar, nameY);
@@ -471,7 +470,7 @@ export async function createUserCardGame(playerInfo) {
   let y1 = 60;
 
   ctx.textAlign = "center";
-  ctx.font = "bold 48px FzPatuaOne";
+  ctx.font = "bold 48px BeVietnamPro";
   ctx.fillStyle = cv.getRandomGradient(ctx, width);
   ctx.fillText(playerInfo.title, width / 2, y1);
 
@@ -521,7 +520,7 @@ export async function createUserCardGame(playerInfo) {
     { label: "🎁 Nhận Quà Daily", value: playerInfo.lastDailyReward },
   ];
 
-  ctx.font = "bold 28px FzPatuaOne";
+  ctx.font = "bold 28px BeVietnamPro";
   for (const field of fields) {
     ctx.fillStyle = cv.getRandomGradient(ctx, width);
     const labelText = field.label + ":";
@@ -591,7 +590,7 @@ export async function createUserCardGame(playerInfo) {
   ctx.stroke();
   y += 20; // Tăng y cho trường tiếp theo
 
-  ctx.font = "bold 28px FzPatuaOne";
+  ctx.font = "bold 28px BeVietnamPro";
   ctx.fillStyle = cv.getRandomGradient(ctx, width);
   ctx.textAlign = "center";
   ctx.fillText("Chúc Bạn 8386 | Mãi Đỉnh Mãi Đỉnh", width / 2, y);
@@ -690,12 +689,12 @@ export async function createBotInfoImage(
   let y1 = 60;
 
   ctx.textAlign = "center";
-  ctx.font = "bold 48px FzPatuaOne";
+  ctx.font = "bold 48px BeVietnamPro";
   ctx.fillStyle = cv.getRandomGradient(ctx, width);
   ctx.fillText(botInfo.name, width / 2, y1);
 
   let y = y1 + 60;
-  ctx.font = "bold 28px FzPatuaOne";
+  ctx.font = "bold 28px BeVietnamPro";
 
   let xCenter = width / 2;
 
@@ -739,7 +738,7 @@ export async function createBotInfoImage(
     endY1 += 40;
 
     ctx.textAlign = "center";
-    ctx.font = "bold 32px FzPatuaOne";
+    ctx.font = "bold 32px BeVietnamPro";
     ctx.fillStyle = cv.getRandomGradient(ctx, width);
     ctx.fillText("📊 Cấu hình hiện tại trong nhóm:", xCenter, endY1);
     endY1 += 40;
@@ -749,7 +748,7 @@ export async function createBotInfoImage(
     let leftY = endY1;
     let rightY = endY1;
 
-    ctx.font = "bold 24px FzPatuaOne";
+    ctx.font = "bold 24px BeVietnamPro";
 
     if (onConfigs.length === 0 && offConfigs.length > 0) {
       // Nếu tất cả đều tắt, vẽ ở giữa
@@ -924,7 +923,7 @@ export async function createGroupInfoImage(groupInfo, owner) {
       ctx.restore();
 
       // Vẽ tên group dưới avatar
-      ctx.font = "bold 32px FzPatuaOne";
+      ctx.font = "bold 32px BeVietnamPro";
       ctx.fillStyle = "#FFFFFF";
       ctx.textAlign = "center";
       const nameY = yAvatar + heightAvatar + 48;
@@ -932,7 +931,7 @@ export async function createGroupInfoImage(groupInfo, owner) {
 
       const lineHeight = 28;
       nameLines.forEach((line, index) => {
-        ctx.font = "bold 24px FzPatuaOne";
+        ctx.font = "bold 24px BeVietnamPro";
         ctx.fillText(line, xAvatar, nameY + index * lineHeight);
         yBottom = nameY + index * lineHeight;
       });
@@ -951,7 +950,7 @@ export async function createGroupInfoImage(groupInfo, owner) {
       : "Nhóm"
     : "Nhóm";
   ctx.textAlign = "center";
-  ctx.font = "bold 48px FzPatuaOne";
+  ctx.font = "bold 48px BeVietnamPro";
   ctx.fillStyle = cv.getRandomGradient(ctx, width);
   ctx.fillText(`Card Group`, width / 2, y1);
 
@@ -974,7 +973,7 @@ export async function createGroupInfoImage(groupInfo, owner) {
     { label: "🏷️ Phân Loại", value: groupType },
   ];
 
-  ctx.font = "bold 28px FzPatuaOne";
+  ctx.font = "bold 28px BeVietnamPro";
   for (const field of fields) {
     ctx.fillStyle = cv.getRandomGradient(ctx, width);
     const labelText = field.label + ":";
@@ -987,7 +986,7 @@ export async function createGroupInfoImage(groupInfo, owner) {
 
   if (groupInfo.desc !== "") {
     ctx.textAlign = "center";
-    ctx.font = "bold 24px FzPatuaOne";
+    ctx.font = "bold 24px BeVietnamPro";
 
     // Vẽ đường thẳng màu trắng
     ctx.beginPath();
