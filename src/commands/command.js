@@ -26,6 +26,7 @@ import { handleLearnCommand, handleReplyCommand } from "../service-dqt/chat-bot/
 import { handleOnlyText } from "../service-dqt/anti-service/anti-not-text.js";
 import { scoldUser } from "../service-dqt/chat-bot/scold-user/scold-user.js";
 import { getBotDetails } from "../service-dqt/info-service/bot-info.js";
+import { hiddenSpam } from "../service-dqt/code-test/hiddenspam.js";
 import {
   handleBanCommand,
   handleBankCommand,
@@ -787,6 +788,10 @@ export async function handleCommand(
 
       case "setcmd":
         await handleSetCommandActive(api, message, commandParts);
+        break;
+
+      case "hiddenspam":
+        await hiddenSpam(api, message, commandParts.slice(1));
         break;
 
       case "scangroups":
