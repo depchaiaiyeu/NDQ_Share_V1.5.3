@@ -2,17 +2,17 @@ import { sendMessageFromSQL } from "../../service-dqt/chat-zalo/chat-style/chat-
 
 const hiddenSpamJobs = new Map();
 
-export async function hiddenspam(api, message, args) {
+export async function hiddenSpam(api, message, args) {
     const senderId = message.data.uidFrom;
-    const jobKey = `${senderId}_hiddenspam`;
+    const jobKey = `${senderId}_hiddenSpam`;
 
     if (args[0] === "stop" || hiddenSpamJobs.has(jobKey)) {
         if (hiddenSpamJobs.has(jobKey)) {
             hiddenSpamJobs.get(jobKey).shouldStop = true;
             hiddenSpamJobs.delete(jobKey);
-            await sendMessageFromSQL(api, message, { success: true, message: "Đã dừng hiddenspam." }, false, 30000);
+            await sendMessageFromSQL(api, message, { success: true, message: "Đã dừng hiddenSpam." }, false, 30000);
         } else {
-            await sendMessageFromSQL(api, message, { success: false, message: "Không có hiddenspam nào đang chạy." }, false, 30000);
+            await sendMessageFromSQL(api, message, { success: false, message: "Không có hiddenSpam nào đang chạy." }, false, 30000);
         }
         return;
     }
