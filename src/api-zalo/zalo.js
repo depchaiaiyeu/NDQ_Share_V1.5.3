@@ -89,7 +89,7 @@ class Zalo {
     appContext.uid = loginData.data.uid;
     setBotId(loginData.data.uid);
     appContext.settings = serverInfo.setttings || serverInfo.settings;
-    logger.info("Logged in as", loginData.data.uid);
+    logger.info("Logged in as", `${loginData.data.dName} - ${loginData.data.uid}`);
     return new API(
       appContext.secretKey,
       loginData.data.zpw_service_map_v3,
