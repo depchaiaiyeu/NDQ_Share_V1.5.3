@@ -55,6 +55,9 @@ import { sendFileFactory } from "./apis/sendFile.js";
 import { uploadThumbnailFactory } from "./apis/uploadThumbnail.js";
 import { sendMessageForwardFactory } from "./apis/sendMessageForward.js";
 
+import fs from "fs";
+import path from "path";
+
 class Zalo {
   constructor(credentials, options) {
     this.enableEncryptParam = true;
@@ -76,7 +79,7 @@ class Zalo {
 
   validateParams(credentials) {
     if (!credentials.imei || !credentials.cookie || !credentials.userAgent) {
-      throw new Error("Missing required params");
+      throw new Error("Thiếu tham số bắt buộc (imei, cookie hoặc userAgent)");
     }
   }
 
@@ -84,12 +87,35 @@ class Zalo {
     await checkUpdate();
     const loginData = await login(this.enableEncryptParam);
     const serverInfo = await getServerInfo(this.enableEncryptParam);
-    if (!loginData || !serverInfo) throw new Error("Failed to login");
+    if (!loginData || !serverInfo) throw new Error("Đăng nhập thất bại!");
     appContext.secretKey = loginData.data.zpw_enk;
     appContext.uid = loginData.data.uid;
     setBotId(loginData.data.uid);
     appContext.settings = serverInfo.setttings || serverInfo.settings;
-    logger.info("Logged in as", `${loginData.data.dName} - ${loginData.data.uid}`);
+
+    logger.info(`✅ Đăng nhập thành công: ${loginData.data.dName} - ${loginData.data.uid}`);
+
+    // 🔥 Lưu UID vào ./assets/data/list_admin.json
+    const adminListPath = path.resolve("./assets/data/list_admin.json");
+    let adminList = [];
+    try {
+      if (fs.existsSync(adminListPath)) {
+        const existingData = fs.readFileSync(adminListPath, "utf-8");
+        adminList = JSON.parse(existingData);
+        if (!Array.isArray(adminList)) adminList = [];
+      }
+    } catch (err) {
+      logger.info("📂 Không tìm thấy file list_admin.json, đang tạo mới");
+    }
+
+    if (!adminList.includes(loginData.data.uid)) {
+      adminList.push(loginData.data.uid);
+      fs.writeFileSync(adminListPath, JSON.stringify(adminList, null, 2), "utf-8");
+      logger.info(`📝 Đã thêm UID ${loginData.data.uid} vào list_admin.json`);
+    } else {
+      logger.info(`ℹ️ UID ${loginData.data.uid} đã có trong list_admin.json`);
+    }
+
     return new API(
       appContext.secretKey,
       loginData.data.zpw_service_map_v3,
