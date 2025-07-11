@@ -3,92 +3,792 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zalo Bot - Control Panel</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>NDQ X TOANDEV - Zalo Bot Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            color: #64ffda;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 16px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 8px;
+            color: #64ffda;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: rgba(100, 255, 218, 0.2);
+            border-color: #64ffda;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+        }
+
+        .list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .list-item:hover {
+            background: rgba(100, 255, 218, 0.1);
+            border-color: rgba(100, 255, 218, 0.3);
+            transform: translateX(5px);
+        }
+
+        .list-item.active {
+            background: rgba(100, 255, 218, 0.2);
+            border-color: #64ffda;
+        }
+
+        .item-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 12px;
+            border: 2px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .item-members {
+            font-size: 12px;
+            color: #b3b3b3;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 193, 7, 0.3);
+        }
+
+        .select-btn {
+            background: rgba(100, 255, 218, 0.2);
+            color: #64ffda;
+        }
+
+        .select-btn:hover {
+            background: rgba(100, 255, 218, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #64ffda;
+        }
+
+        .chat-info h3 {
+            color: #64ffda;
+            margin-bottom: 4px;
+        }
+
+        .chat-info p {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 3px solid #64ffda;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 12px;
+            border: 2px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: #64ffda;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .message-text {
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .message-input {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .message-textarea {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #ffffff;
+            resize: none;
+            min-height: 45px;
+            max-height: 120px;
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #64ffda 0%, #00bcd4 100%);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #64ffda;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tool-btn {
+            padding: 8px 16px;
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 8px;
+            color: #64ffda;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tool-btn:hover {
+            background: rgba(100, 255, 218, 0.2);
+        }
+
+        .selected-count {
+            padding: 10px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 8px;
+            color: #64ffda;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 255, 218, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 255, 218, 0.5);
+        }
+
+        .list-item.selected {
+            background: rgba(100, 255, 218, 0.15);
+            border-color: rgba(100, 255, 218, 0.5);
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .bulk-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            color: #4caf50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bulk-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        .bulk-btn.danger {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+
+        .bulk-btn.danger:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+    </style>
 </head>
 <body>
-    <div class="menu-toggle" id="menuToggle">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-    </div>
-
-    <nav class="side-menu" id="sideMenu">
-        <div class="menu-header">
-            <h3>Menu</h3>
-        </div>
-        <ul>
-            <li><a href="#" data-page="dashboard"><i class="fas fa-home"></i> <span>Trang chủ</span></a></li>
-            <li><a href="#" id="botCommandsLink"><i class="fas fa-terminal"></i> <span>Lệnh bot</span></a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <div class="grid-container">
-            <div class="grid-item lists">
-                <div class="list-header">
-                    <h2 class="list-title">Danh sách nhóm</h2>
-                    <div class="list-toggle">
-                        <button id="groupsBtn" class="active">Groups</button>
-                        <button id="friendsBtn">Friends</button>
-                        <button id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
-                    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-robot"></i> Zalo Bot Control</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="groups">
+                        <i class="fas fa-users"></i> Nhóm
+                    </button>
+                    <button class="tab-btn" data-tab="friends">
+                        <i class="fas fa-user-friends"></i> Bạn bè
+                    </button>
                 </div>
-                <div class="list-content">
-                    <div class="group-list"></div>
-                    <div class="friend-list" style="display: none"></div>
-                </div>
-                <div class="list-footer">
-                    <span class="selected-count">Đã Chọn: 0</span>
-                    <div class="select-buttons">
-                        <button id="selectAllBtn">Chọn tất cả</button>
-                        <button id="unselectAllBtn">Bỏ chọn tất cả</button>
-                    </div>
-                </div>
+                <input type="text" class="search-box" placeholder="Tìm kiếm...">
             </div>
-            <div class="grid-item logs">
-                <h2>Tin Nhắn Và Sự Kiện</h2>
-                <div class="log-content"></div>
+            
+            <div class="selected-count">
+                <i class="fas fa-check-circle"></i> 
+                <span id="selectedCount">Đã chọn: 0 nhóm - 0 bạn bè</span>
             </div>
-            <div class="grid-item actions">
-                <h2>Thao Tác</h2>
-                <div class="action-content">
-                    <textarea id="messageContent" rows="4" placeholder="Nhập nội dung tin nhắn..."></textarea>
-                    <div class="file-upload">
-                        <input type="file" id="fileInput" multiple>
-                        <label for="fileInput">Chọn file</label>
-                        <div id="fileList"></div>
-                    </div>
-                    <div class="schedule-send">
-                        <input type="number" id="timeValue" min="1" placeholder="Thời gian">
-                        <select id="timeUnit">
-                            <option value="seconds">Giây</option>
-                            <option value="minutes">Phút</option>
-                            <option value="hours">Giờ</option>
-                            <option value="days">Ngày</option>
-                        </select>
-                    </div>
-                    <div class="send-buttons">
-                        <button id="sendToFriends">Gửi cho bạn bè</button>
-                        <button id="sendToGroups">Gửi cho nhóm</button>
-                        <button id="sendForSelected">Gửi cho đối tượng đã chọn</button>
-                        <button id="sendBulkMessage">Gửi liên tục</button>
-                    </div>
-                </div>
+            
+            <div class="toolbar">
+                <button class="tool-btn" id="selectAllBtn">
+                    <i class="fas fa-check-square"></i> Chọn tất cả
+                </button>
+                <button class="tool-btn" id="clearAllBtn">
+                    <i class="fas fa-times"></i> Bỏ chọn
+                </button>
+                <button class="tool-btn" id="refreshBtn">
+                    <i class="fas fa-sync"></i> Làm mới
+                </button>
+            </div>
+            
+            <div class="list-container">
+                <div id="groupsList" class="list-content active"></div>
+                <div id="friendsList" class="list-content" style="display: none;"></div>
+            </div>
+            
+            <div class="bulk-actions">
+                <button class="bulk-btn" id="sendSelectedBtn">
+                    <i class="fas fa-paper-plane"></i> Gửi đã chọn
+                </button>
+                <button class="bulk-btn danger" id="sendAllBtn">
+                    <i class="fas fa-broadcast-tower"></i> Gửi tất cả
+                </button>
             </div>
         </div>
-    </main>
-
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3 class="modal-title">Cài đặt nhóm</h3>
-            <div class="settings-grid" id="settingsGrid"></div>
+        
+        <div class="main-content">
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <img id="chatAvatar" class="chat-avatar" src="">
+                <div class="chat-info">
+                    <h3 id="chatName"></h3>
+                    <p id="chatMembers"></p>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="empty-state">
+                    <i class="fas fa-comments"></i>
+                    <h3>Chọn một nhóm để bắt đầu chat</h3>
+                    <p>Nhấp vào nhóm hoặc bạn bè để xem tin nhắn</p>
+                </div>
+            </div>
+            
+            <div class="message-input" id="messageInput" style="display: none;">
+                <div class="input-container">
+                    <textarea class="message-textarea" placeholder="Nhập tin nhắn..."></textarea>
+                    <button class="send-btn">
+                        <i class="fas fa-paper-plane"></i> Gửi
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/scripts/main.js"></script>
+    <script>
+        const socket = io();
+        let selectedGroups = new Set();
+        let selectedFriends = new Set();
+        let currentChatId = null;
+        let currentChatType = null;
+        let currentTab = 'groups';
+        
+        let groupsData = [];
+        let friendsData = [];
+        let chatMessages = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            loadData();
+        });
+
+        function initializeApp() {
+            console.log('Khởi tạo ứng dụng...');
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+
+            document.getElementById('selectAllBtn').addEventListener('click', selectAll);
+            document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+            document.getElementById('refreshBtn').addEventListener('click', loadData);
+            document.getElementById('sendSelectedBtn').addEventListener('click', sendToSelected);
+            document.getElementById('sendAllBtn').addEventListener('click', sendToAll);
+
+            document.querySelector('.send-btn').addEventListener('click', sendMessage);
+            document.querySelector('.message-textarea').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            
+            if (tab === 'groups') {
+                document.getElementById('groupsList').style.display = 'block';
+                document.getElementById('friendsList').style.display = 'none';
+                renderGroups();
+            } else {
+                document.getElementById('groupsList').style.display = 'none';
+                document.getElementById('friendsList').style.display = 'block';
+                renderFriends();
+            }
+            updateSelectedCount();
+        }
+
+        function loadData() {
+            socket.emit('getAllGroups');
+            socket.emit('getAllFriends');
+        }
+
+        function renderGroups() {
+            const container = document.getElementById('groupsList');
+            container.innerHTML = '';
+            
+            groupsData.forEach(group => {
+                const item = createListItem(group, 'group');
+                container.appendChild(item);
+            });
+        }
+
+        function renderFriends() {
+            const container = document.getElementById('friendsList');
+            container.innerHTML = '';
+            
+            friendsData.forEach(friend => {
+                const item = createListItem(friend, 'friend');
+                container.appendChild(item);
+            });
+        }
+
+        function createListItem(data, type) {
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            const id = data.groupId || data.userId;
+            const isSelected = type === 'group' ? selectedGroups.has(id) : selectedFriends.has(id);
+            
+            if (isSelected) {
+                div.classList.add('selected');
+            }
+            
+            div.innerHTML = `
+                <img src="${data.avatar || data.avt}" class="item-avatar" alt="Avatar">
+                <div class="item-info">
+                    <div class="item-name">${data.name || data.zaloName}</div>
+                    <div class="item-members">
+                        ${type === 'group' ? `${data.memberCount} thành viên` : 'Bạn bè'}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    ${type === 'group' ? `
+                        <button class="action-btn settings-btn" data-id="${id}">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    ` : ''}
+                    <button class="action-btn select-btn" data-id="${id}" data-type="${type}">
+                        <i class="fas fa-${isSelected ? 'check-square' : 'square'}"></i>
+                    </button>
+                </div>
+            `;
+
+            div.addEventListener('click', function() {
+                openChat(id, type, data);
+            });
+
+            div.querySelector('.select-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleSelection(id, type);
+            });
+
+            if (type === 'group') {
+                div.querySelector('.settings-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openSettings(id, data.name);
+                });
+            }
+
+            return div;
+        }
+
+        function toggleSelection(id, type) {
+            if (type === 'group') {
+                if (selectedGroups.has(id)) {
+                    selectedGroups.delete(id);
+                } else {
+                    selectedGroups.add(id);
+                }
+            } else {
+                if (selectedFriends.has(id)) {
+                    selectedFriends.delete(id);
+                } else {
+                    selectedFriends.add(id);
+                }
+            }
+            
+            updateSelectedCount();
+            switchTab(currentTab);
+        }
+
+        function updateSelectedCount() {
+            const count = `Đã chọn: ${selectedGroups.size} nhóm - ${selectedFriends.size} bạn bè`;
+            document.getElementById('selectedCount').textContent = count;
+        }
+
+        function openChat(id, type, data) {
+            currentChatId = id;
+            currentChatType = type;
+            
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('messageInput').style.display = 'block';
+            
+            document.getElementById('chatAvatar').src = data.avatar || data.avt;
+            document.getElementById('chatName').textContent = data.name || data.zaloName;
+            document.getElementById('chatMembers').textContent = 
+                type === 'group' ? `${data.memberCount} thành viên` : 'Bạn bè';
+            
+            loadChatMessages(id, type);
+        }
+
+        function loadChatMessages(id, type) {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+            
+            socket.emit('getChatMessages', { id, type });
+            
+            if (chatMessages[id]) {
+                renderMessages(chatMessages[id]);
+            } else {
+                messagesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>Chưa có tin nhắn nào</h3>
+                        <p>Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn đầu tiên</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            
+            messages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                messageDiv.innerHTML = `
+                    <img src="${msg.avatar || '/default-avatar.png'}" class="message-avatar" alt="Avatar">
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-sender">${msg.sender}</span>
+                            <span class="message-time">${msg.time}</span>
+                        </div>
+                        <div class="message-text">${msg.content}</div>
+                    </div>
+                `;
+                container.appendChild(messageDiv);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const textarea = document.querySelector('.message-textarea');
+            const content = textarea.value.trim();
+            
+            if (!content || !currentChatId) return;
+            
+            socket.emit('sendMessage', {
+                id: currentChatId,
+                type: currentChatType,
+                content: content
+            });
+            
+            textarea.value = '';
+        }
+
+        function selectAll() {
+            if (currentTab === 'groups') {
+                groupsData.forEach(group => selectedGroups.add(group.groupId));
+            } else {
+                friendsData.forEach(friend => selectedFriends.add(friend.userId));
+            }
+            updateSelectedCount();
+            switchTab(currentTab);
+        }
+
+        function clearAll() {
+            if (currentTab === 'groups') {
+                selectedGroups.clear();
+            } else {
+                selectedFriends.clear();
+            }
+            updateSelectedCount();
+            switchTab(currentTab);
+        }
+
+        function sendToSelected() {
+            if (selectedGroups.size === 0 && selectedFriends.size === 0) {
+                alert('Vui lòng chọn ít nhất một đối tượng');
+                return;
+            }
+            
+            const content = document.querySelector('.message-textarea').value.trim();
+            if (!content) {
+                alert('Vui lòng nhập nội dung tin nhắn');
+                return;
+            }
+            
+            socket.emit('sendBulkMessage', {
+                groups: Array.from(selectedGroups),
+                friends: Array.from(selectedFriends),
+                content: content
+            });
+        }
+
+        function sendToAll() {
+            const content = document.querySelector('.message-textarea').value.trim();
+            if (!content) {
+                alert('Vui lòng nhập nội dung tin nhắn');
+                return;
+            }
+            
+            if (confirm('Bạn có chắc muốn gửi tin nhắn đến tất cả nhóm và bạn bè?')) {
+                socket.emit('sendBulkMessage', {
+                    groups: groupsData.map(g => g.groupId),
+                    friends: friendsData.map(f => f.userId),
+                    content: content
+                });
+            }
+        }
+
+        function openSettings(groupId, groupName) {
+            console.log('Mở cài đặt cho nhóm:', groupId, groupName);
+        }
+
+        socket.on('groupsList', function(groups) {
+            groupsData = groups;
+            if (currentTab === 'groups') {
+                renderGroups();
+            }
+        });
+
+        socket.on('friendsList', function(friends) {
+            friendsData = friends;
+            if (currentTab === 'friends') {
+                renderFriends();
+            }
+        });
+
+        socket.on('chatMessages', function(data) {
+            chatMessages[data.id] = data.messages;
+            if (currentChatId === data.id) {
+                renderMessages(data.messages);
+            }
+        });
+
+        socket.on('newMessage', function(messageData) {
+            const chatId = messageData.groupId || messageData.userId;
+            
+            if (!chatMessages[chatId]) {
+                chatMessages[chatId] = [];
+            }
+            
+            chatMessages[chatId].push({
+                sender: messageData.senderName,
+                content: messageData.content,
+                time: new Date().toLocaleTimeString(),
+                avatar: messageData.avatar
+            });
+            
+            if (currentChatId === chatId) {
+                renderMessages(chatMessages[chatId]);
+            }
+        });
+    </script>
 </body>
 </html>
