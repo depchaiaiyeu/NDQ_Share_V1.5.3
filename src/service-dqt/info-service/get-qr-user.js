@@ -102,7 +102,7 @@ async function createQRImage(qrLink, content = "") {
     }
 }
 
-export async function handleGetQRCommand(api, message, aliasCommand) {
+export async function getQRUser(api, message, aliasCommand) {
     const prefixGlobal = getGlobalPrefix();
     const content = removeMention(message);
     const textString = content
