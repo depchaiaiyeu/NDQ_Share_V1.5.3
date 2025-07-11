@@ -2,6 +2,17 @@
   "prefix": ".",
   "commands": [
     {
+      "name": "getqr",
+      "description": "Lấy mã QR",
+      "syntax": "{p}getqr",
+      "permission": "all",
+      "countdown": 5,
+      "icon": "🔢",
+      "type": 1,
+      "author": "Vũ Xuân Kiên",
+      "active": true
+    },
+    {
       "name": "help",
       "alias": [
         "menu"
