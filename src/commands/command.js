@@ -11,6 +11,7 @@ import { weatherCommand } from "../service-dqt/api-crawl/content/weather.js";
 
 import { groupInfoCommand } from "../service-dqt/info-service/group-info.js";
 import { userInfoCommand } from "../service-dqt/info-service/user-info.js";
+import { getQRUser } from "../service-dqt/info-service/get-qr-user.js";
 import { handleRankCommand } from "../service-dqt/info-service/rank-chat.js";
 
 import { chatAll } from "../service-dqt/chat-zalo/chat-general/chat-all.js";
@@ -413,6 +414,8 @@ export async function handleCommandPrivate(api, message) {
             return 0;
           case "info":
             await userInfoCommand(api, message, aliasCommand);
+          case "getqr":
+            await getQRUser(api, message, aliasCommand);
             return 0;
           case "card":
             await userBussinessCardCommand(api, message, aliasCommand);
