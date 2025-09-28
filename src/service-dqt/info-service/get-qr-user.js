@@ -1,11 +1,12 @@
 import { removeMention } from "../../utils/format-util.js";
+import { sendMessageFromSQL } from "../chat-zalo/chat-style/chat-style.js";
 import { getGlobalPrefix } from "../service.js";
 import { createCanvas, loadImage } from "canvas";
-import axios from "axios";
 import fs from "fs";
 import path from "path";
 import { deleteFile } from "../../utils/util.js";
 import { MessageMention } from "../../api-zalo/index.js";
+import { getUserInfoData } from "./user-info.js";
 
 async function loadImageWithRetry(url, maxRetries = 3, timeout = 10000) {
     let lastError;
@@ -34,51 +35,97 @@ async function loadImageWithRetry(url, maxRetries = 3, timeout = 10000) {
     throw lastError;
 }
 
-async function createQRImage(qrLink, content = "") {
-    const width = 800;
-    const height = 600;
+async function createQRUserCardImage(qrCodeUrl, userInfo, content = "") {
+    const width = 1000;
+    const height = 400;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext("2d");
 
     try {
-        const gradient = ctx.createLinearGradient(0, 0, width, height);
-        gradient.addColorStop(0, "#1976d2");
-        gradient.addColorStop(1, "#2196f3");
-        ctx.fillStyle = gradient;
+        let backgroundImage;
+        try {
+            backgroundImage = await loadImageWithRetry(userInfo.avatar);
+            ctx.filter = 'blur(8px)';
+            ctx.drawImage(backgroundImage, 0, 0, width, height);
+            ctx.filter = 'none';
+        } catch (error) {
+            console.error("Lỗi khi load avatar:", error);
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, "#1a237e");
+            gradient.addColorStop(1, "#0d47a1");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        const overlay = ctx.createLinearGradient(0, 0, width, height);
+        overlay.addColorStop(0, "rgba(26, 35, 126, 0.3)");
+        overlay.addColorStop(1, "rgba(13, 71, 161, 0.3)");
+        ctx.fillStyle = overlay;
         ctx.fillRect(0, 0, width, height);
 
-        const qrImage = await loadImageWithRetry(qrLink);
-        
+        const qrImage = await loadImageWithRetry(qrCodeUrl);
+
+        const qrSize = 300;
+        const qrPadding = 50;
+
         ctx.save();
-        ctx.shadowColor = 'white';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
         ctx.shadowBlur = 15;
         ctx.shadowOffsetX = 5;
         ctx.shadowOffsetY = 5;
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(50, 50, 300, 300);
+        ctx.fillRect(qrPadding - 10, (height - qrSize) / 2 - 10, qrSize + 20, qrSize + 20);
         ctx.restore();
 
-        ctx.drawImage(qrImage, 60, 60, 280, 280);
+        ctx.drawImage(qrImage, qrPadding, (height - qrSize) / 2, qrSize, qrSize);
 
         ctx.beginPath();
-        ctx.moveTo(350, 50);
-        ctx.lineTo(350, height - 50);
+        ctx.moveTo(qrSize + qrPadding * 2, 50);
+        ctx.lineTo(qrSize + qrPadding * 2, height - 50);
         ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
         ctx.lineWidth = 2;
         ctx.stroke();
 
         ctx.textAlign = "left";
+        const infoX = qrSize + qrPadding * 3;
+        let infoY = 82;
+        const lineHeight = 50;
+
+        const textGradient = ctx.createLinearGradient(infoX, 0, width - 50, 0);
+        textGradient.addColorStop(0, "#ffd700");
+        textGradient.addColorStop(1, "#ffeb3b");
+
+        ctx.font = "bold 32px BeVietnamPro";
+        ctx.fillStyle = textGradient;
+        ctx.fillText("QR NGƯỜI DÙNG", infoX, infoY);
+        infoY += lineHeight;
+
+        ctx.font = "bold 28px BeVietnamPro";
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px Arial";
 
-        ctx.fillText("Thông Tin QR Code", 370, 80);
+        const fields = [
+            { label: "Tên:", value: userInfo.displayName || userInfo.name || "Không rõ" },
+            { label: "Nội dung:", value: content || "Không có" }
+        ];
 
-        const lines = content.split("\n");
-        lines.forEach((line, index) => {
-            ctx.fillText(line, 370, 120 + index * 40);
+        fields.forEach(field => {
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.fillText(field.label, infoX, infoY);
+
+            const labelWidth = ctx.measureText(field.label).width;
+            ctx.fillStyle = "#ffffff";
+            const maxValueWidth = width - infoX - labelWidth - 80;
+            let displayValue = field.value;
+            
+            if (field.label === "Nội dung:" && field.value.length > 30) {
+                displayValue = field.value.substring(0, 30) + '...';
+            }
+            
+            ctx.fillText(displayValue, infoX + labelWidth + 15, infoY);
+            infoY += lineHeight;
         });
 
-        const filePath = path.resolve(`./assets/temp/qr_${Date.now()}.png`);
+        const filePath = path.resolve(`./assets/temp/qr_user_${Date.now()}.png`);
         const out = fs.createWriteStream(filePath);
         const stream = canvas.createPNGStream();
         stream.pipe(out);
@@ -88,7 +135,7 @@ async function createQRImage(qrLink, content = "") {
             out.on("error", reject);
         });
     } catch (error) {
-        console.error("Lỗi khi tạo ảnh QR:", error);
+        console.error("Lỗi khi tạo ảnh QR user:", error);
         return null;
     }
 }
@@ -100,12 +147,21 @@ export async function getQRUser(api, message, aliasCommand) {
         .replace(`${prefixGlobal}${aliasCommand}`, "")
         .trim();
 
+    let imagePath = "";
+
     try {
         const targetUserId = message.data.mentions?.length > 0
             ? message.data.mentions.map((mention) => mention.uid)
             : [message.data.uidFrom];
 
-        for (const userId of targetUserId) {
+        const targetUserName = message.data.mentions?.length > 0
+            ? message.data.mentions.map((mention) => mention.displayName)
+            : [message.data.dName];
+
+        for (let i = 0; i < targetUserId.length; i++) {
+            const userId = targetUserId[i];
+            const userName = targetUserName[i];
+
             try {
                 const qrData = await api.getQRLink(userId);
                 const qrLink = qrData[userId.toString()];
@@ -115,35 +171,28 @@ export async function getQRUser(api, message, aliasCommand) {
                         success: false,
                         message: "Không thể lấy QR code cho người dùng này."
                     };
-                    await api.sendMessage(result, message.threadId);
+                    await sendMessageFromSQL(api, message, result, false, 15000);
                     continue;
                 }
+
+                const userInfo = await getUserInfoData(api, userId);
                 
-                const contentText = `Người dùng: ${message.data.dName}\n`;
-                const imagePath = await createQRImage(qrLink, contentText);
+                imagePath = await createQRUserCardImage(qrLink, userInfo, textString);
 
                 if (!imagePath) {
                     const result = {
                         success: false,
                         message: "Đã xảy ra lỗi khi tạo ảnh QR."
                     };
-                    await api.sendMessage(result, message.threadId);
+                    await sendMessageFromSQL(api, message, result, false, 15000);
                     continue;
                 }
 
                 await api.sendMessage({
-                    msg: "Đây là mã QR của bạn!",
+                    msg: `${userName} đây là QR code của bạn!`,
                     attachments: [imagePath],
-                    mentions: [MessageMention(userId, message.data.dName.length, 0)]
-                }, message.threadId);
-
-                setTimeout(() => {
-                    try {
-                        deleteFile(imagePath);
-                    } catch (error) {
-                        console.error("Lỗi khi xóa file temp:", error);
-                    }
-                }, 30000);
+                    mentions: [MessageMention(userId, userName.length, 0)]
+                }, message.threadId, message.type);
 
             } catch (error) {
                 console.error("Lỗi khi lấy QR:", error);
@@ -151,7 +200,12 @@ export async function getQRUser(api, message, aliasCommand) {
                     success: false,
                     message: `Đã xảy ra lỗi khi lấy QR: ${error.message}`
                 };
-                await api.sendMessage(result, message.threadId);
+                await sendMessageFromSQL(api, message, result, false, 15000);
+            } finally {
+                if (imagePath) {
+                    await deleteFile(imagePath);
+                    imagePath = "";
+                }
             }
         }
     } catch (error) {
@@ -160,6 +214,10 @@ export async function getQRUser(api, message, aliasCommand) {
             success: false,
             message: "Đã xảy ra lỗi khi xử lý lệnh getqr."
         };
-        await api.sendMessage(result, message.threadId);
+        await sendMessageFromSQL(api, message, result, false, 15000);
+    } finally {
+        if (imagePath) {
+            await deleteFile(imagePath);
+        }
     }
-}
+            }
