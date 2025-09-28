@@ -9,26 +9,35 @@ const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 export async function callGPTAPI(question) {
   try {
     const response = await axios.post(OPENAI_URL, {
-      model: "gpt-4o",
+      model: "gpt-4o-mini", // Sử dụng gpt-4o-mini thay vì gpt-4o (rẻ hơn và ổn định hơn)
       messages: [
         {
           role: "user",
           content: question
         }
       ],
-      max_tokens: 2000,
+      max_tokens: 1500,
       temperature: 0.7
     }, {
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 30000 // Thêm timeout 30 giây
     });
 
     const data = response.data;
     return data.choices[0].message.content;
   } catch (error) {
     console.error("Lỗi khi gọi API GPT:", error.response?.data || error.message);
+    
+    // Log chi tiết lỗi để debug
+    if (error.response) {
+      console.error("Status:", error.response.status);
+      console.error("Headers:", error.response.headers);
+      console.error("Data:", error.response.data);
+    }
+    
     return null;
   }
 }
