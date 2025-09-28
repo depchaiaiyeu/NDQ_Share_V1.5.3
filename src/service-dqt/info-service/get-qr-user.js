@@ -41,17 +41,14 @@ async function createQRImage(qrLink, content = "") {
     const ctx = canvas.getContext("2d");
 
     try {
-        // Background
         const gradient = ctx.createLinearGradient(0, 0, width, height);
         gradient.addColorStop(0, "#1976d2");
         gradient.addColorStop(1, "#2196f3");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
 
-        // Load QR code
         const qrImage = await loadImageWithRetry(qrLink);
         
-        // Draw QR code with white border
         ctx.save();
         ctx.shadowColor = 'white';
         ctx.shadowBlur = 15;
@@ -61,10 +58,8 @@ async function createQRImage(qrLink, content = "") {
         ctx.fillRect(50, 50, 300, 300);
         ctx.restore();
 
-        // Draw QR code
         ctx.drawImage(qrImage, 60, 60, 280, 280);
 
-        // Draw vertical separator
         ctx.beginPath();
         ctx.moveTo(350, 50);
         ctx.lineTo(350, height - 50);
@@ -72,21 +67,17 @@ async function createQRImage(qrLink, content = "") {
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Draw content
         ctx.textAlign = "left";
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 24px Arial";
 
-        // Content header
         ctx.fillText("Thông Tin QR Code", 370, 80);
 
-        // Content details
         const lines = content.split("\n");
         lines.forEach((line, index) => {
             ctx.fillText(line, 370, 120 + index * 40);
         });
 
-        // Save to file
         const filePath = path.resolve(`./assets/temp/qr_${Date.now()}.png`);
         const out = fs.createWriteStream(filePath);
         const stream = canvas.createPNGStream();
@@ -117,7 +108,16 @@ export async function getQRUser(api, message, aliasCommand) {
         for (const userId of targetUserId) {
             try {
                 const qrData = await api.getQRLink(userId);
-                const qrLink = qrData.qr_link;
+                const qrLink = qrData[userId.toString()];
+                
+                if (!qrLink) {
+                    const result = {
+                        success: false,
+                        message: "Không thể lấy QR code cho người dùng này."
+                    };
+                    await api.sendMessage(result, message.threadId);
+                    continue;
+                }
                 
                 const contentText = `Người dùng: ${message.data.dName}\n`;
                 const imagePath = await createQRImage(qrLink, contentText);
@@ -136,6 +136,14 @@ export async function getQRUser(api, message, aliasCommand) {
                     attachments: [imagePath],
                     mentions: [MessageMention(userId, message.data.dName.length, 0)]
                 }, message.threadId);
+
+                setTimeout(() => {
+                    try {
+                        deleteFile(imagePath);
+                    } catch (error) {
+                        console.error("Lỗi khi xóa file temp:", error);
+                    }
+                }, 30000);
 
             } catch (error) {
                 console.error("Lỗi khi lấy QR:", error);
