@@ -114,7 +114,6 @@ async function createQRUserCardImage(qrCodeUrl, userInfo, content = "") {
 
             const labelWidth = ctx.measureText(field.label).width;
             ctx.fillStyle = "#ffffff";
-            const maxValueWidth = width - infoX - labelWidth - 80;
             let displayValue = field.value;
             
             if (field.label === "Nội dung:" && field.value.length > 30) {
@@ -143,20 +142,19 @@ async function createQRUserCardImage(qrCodeUrl, userInfo, content = "") {
 export async function getQRUser(api, message, aliasCommand) {
     const prefixGlobal = getGlobalPrefix();
     const content = removeMention(message);
-    const textString = content
-        .replace(`${prefixGlobal}${aliasCommand}`, "")
-        .trim();
-
+    const senderName = message.data.dName;
+    const senderId = message.data.uidFrom;
+    let stringCommand = content.replace(`${prefixGlobal}${aliasCommand}`, "").trim();
     let imagePath = "";
-
+    
     try {
         const targetUserId = message.data.mentions?.length > 0
             ? message.data.mentions.map((mention) => mention.uid)
-            : [message.data.uidFrom];
+            : [senderId];
 
         const targetUserName = message.data.mentions?.length > 0
             ? message.data.mentions.map((mention) => mention.displayName)
-            : [message.data.dName];
+            : [senderName];
 
         for (let i = 0; i < targetUserId.length; i++) {
             const userId = targetUserId[i];
@@ -171,26 +169,20 @@ export async function getQRUser(api, message, aliasCommand) {
                         success: false,
                         message: "Không thể lấy QR code cho người dùng này."
                     };
-                    await api.sendMessage({
-                        success: false,
-                        message: "Không thể lấy QR code cho người dùng này."
-                    }, message.threadId, message.type);
+                    await sendMessageFromSQL(api, message, result, false, 15000);
                     continue;
                 }
 
                 const userInfo = await getUserInfoData(api, userId);
                 
-                imagePath = await createQRUserCardImage(qrLink, userInfo, textString);
+                imagePath = await createQRUserCardImage(qrLink, userInfo, stringCommand);
 
                 if (!imagePath) {
                     const result = {
                         success: false,
                         message: "Đã xảy ra lỗi khi tạo ảnh QR."
                     };
-                    await api.sendMessage({
-                        success: false,
-                        message: "Đã xảy ra lỗi khi tạo ảnh QR."
-                    }, message.threadId, message.type);
+                    await sendMessageFromSQL(api, message, result, true, 15000);
                     continue;
                 }
 
@@ -206,10 +198,7 @@ export async function getQRUser(api, message, aliasCommand) {
                     success: false,
                     message: `Đã xảy ra lỗi khi lấy QR: ${error.message}`
                 };
-                    await api.sendMessage({
-                        success: false,
-                        message: `Đã xảy ra lỗi khi lấy QR: ${error.message}`
-                    }, message.threadId, message.type);
+                await sendMessageFromSQL(api, message, result, true, 15000);
             } finally {
                 if (imagePath) {
                     await deleteFile(imagePath);
@@ -218,18 +207,15 @@ export async function getQRUser(api, message, aliasCommand) {
             }
         }
     } catch (error) {
-        console.error("Lỗi khi xử lý lệnh getqr:", error);
+        console.error("Lỗi khi xử lý lệnh QR user:", error);
         const result = {
             success: false,
-            message: "Đã xảy ra lỗi khi xử lý lệnh getqr."
+            message: `Đã xảy ra lỗi khi xử lý QR user.`
         };
-        await api.sendMessage({
-            success: false,
-            message: "Đã xảy ra lỗi khi xử lý lệnh getqr."
-        }, message.threadId, message.type);
+        await sendMessageFromSQL(api, message, result, true, 15000);
     } finally {
         if (imagePath) {
             await deleteFile(imagePath);
         }
     }
-                    }
+    }
