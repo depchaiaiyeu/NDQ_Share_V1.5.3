@@ -192,7 +192,7 @@ export async function getQRUser(api, message, aliasCommand) {
                     msg: `${userName} đây là QR code của bạn!`,
                     attachments: [imagePath],
                     mentions: [MessageMention(userId, userName.length, 0)]
-                }, message.threadId, message.type);
+                }, message.threadId);
 
             } catch (error) {
                 console.error("Lỗi khi lấy QR:", error);
@@ -220,4 +220,4 @@ export async function getQRUser(api, message, aliasCommand) {
             await deleteFile(imagePath);
         }
     }
-            }
+                                                          }
