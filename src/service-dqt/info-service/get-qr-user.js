@@ -171,7 +171,10 @@ export async function getQRUser(api, message, aliasCommand) {
                         success: false,
                         message: "Không thể lấy QR code cho người dùng này."
                     };
-                    await sendMessageFromSQL(api, message, result, false, 15000);
+                    await api.sendMessage({
+                        success: false,
+                        message: "Không thể lấy QR code cho người dùng này."
+                    }, message.threadId, message.type);
                     continue;
                 }
 
@@ -184,7 +187,10 @@ export async function getQRUser(api, message, aliasCommand) {
                         success: false,
                         message: "Đã xảy ra lỗi khi tạo ảnh QR."
                     };
-                    await sendMessageFromSQL(api, message, result, false, 15000);
+                    await api.sendMessage({
+                        success: false,
+                        message: "Đã xảy ra lỗi khi tạo ảnh QR."
+                    }, message.threadId, message.type);
                     continue;
                 }
 
@@ -192,7 +198,7 @@ export async function getQRUser(api, message, aliasCommand) {
                     msg: `${userName} đây là QR code của bạn!`,
                     attachments: [imagePath],
                     mentions: [MessageMention(userId, userName.length, 0)]
-                }, message.threadId);
+                }, message.threadId, message.type);
 
             } catch (error) {
                 console.error("Lỗi khi lấy QR:", error);
@@ -200,7 +206,10 @@ export async function getQRUser(api, message, aliasCommand) {
                     success: false,
                     message: `Đã xảy ra lỗi khi lấy QR: ${error.message}`
                 };
-                await sendMessageFromSQL(api, message, result, false, 15000);
+                    await api.sendMessage({
+                        success: false,
+                        message: `Đã xảy ra lỗi khi lấy QR: ${error.message}`
+                    }, message.threadId, message.type);
             } finally {
                 if (imagePath) {
                     await deleteFile(imagePath);
@@ -214,10 +223,13 @@ export async function getQRUser(api, message, aliasCommand) {
             success: false,
             message: "Đã xảy ra lỗi khi xử lý lệnh getqr."
         };
-        await sendMessageFromSQL(api, message, result, false, 15000);
+        await api.sendMessage({
+            success: false,
+            message: "Đã xảy ra lỗi khi xử lý lệnh getqr."
+        }, message.threadId, message.type);
     } finally {
         if (imagePath) {
             await deleteFile(imagePath);
         }
     }
-                                                          }
+                    }
